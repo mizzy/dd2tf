@@ -136,12 +136,26 @@ module Dd2tf
             tile_def[key] = filter_requests(v)
           elsif key == "markers"
             tile_def[key] = filter_markers(v)
+          elsif key == "events"
+            tile_def[key] = filter_events(v)
           else
             tile_def[key] = format_value(v)
           end
         end
       end
       tile_def
+    end
+
+    def filter_events(v)
+      events = []
+      v.each do |e|
+        event = {}
+        e.each do |k, v|
+          event[k] = format_value(v)
+        end
+        events << event
+      end
+      events
     end
 
     def filter_markers(v)

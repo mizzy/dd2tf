@@ -23,6 +23,14 @@ resource "datadog_screenboard" "<%= board_name %>" {
                       <%- end -%>
                     }
                     <%- end -%>
+                  <%- elsif k == "events" -%>
+                    <%- v.each do |event| -%>
+                    event {
+                      <%- event.each do |k, v| -%>
+                        <%= k %> = <%= v %>
+                      <%- end -%>
+                    }
+                    <%- end -%>
                   <%- elsif k == "requests" -%>
                     <%- v.each do |request| -%>
                       request {
