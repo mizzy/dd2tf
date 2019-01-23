@@ -4,10 +4,26 @@ resource "datadog_screenboard" "<%= board_name %>" {
       <%- v.each do |widget| -%>
       widget {
           <%- widget.each do |k, v| -%>
-             <%- if k == "tile_def" -%>
+            <%- if k == "conditional_formats" -%>
+              <%- v.each do |format| -%>
+              conditional_format {
+                 <%- format.each do |k, v| -%>
+                   <%= k %> = <%= v %>
+                 <%- end -%>
+              }
+              <%- end -%>
+            <%- elsif k == "tile_def" -%>
              tile_def {
                 <%- v.each do |k, v| -%>
-                  <%- if k == "requests" -%>
+                  <%- if k == "markers" -%>
+                    <%- v.each do |marker| -%>
+                    marker {
+                      <%- marker.each do |k, v| -%>
+                        <%= k %> = <%= v %>
+                      <%- end -%>
+                    }
+                    <%- end -%>
+                  <%- elsif k == "requests" -%>
                     <%- v.each do |request| -%>
                       request {
                       <%- request.each do |k, v| -%>

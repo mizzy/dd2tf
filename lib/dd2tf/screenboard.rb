@@ -92,6 +92,8 @@ module Dd2tf
                 w[key] = filter_tile_def(v)
               elsif key == "time"
                 w[key] = filter_time(v) if v != {}
+              elsif key == "conditional_formats"
+                w[key] = filter_conditional_formats(v)
               else
                 w[key] = format_value(v)
               end
@@ -132,6 +134,8 @@ module Dd2tf
 
           if key == "requests"
             tile_def[key] = filter_requests(v)
+          elsif key == "markers"
+            tile_def[key] = filter_markers(v)
           else
             tile_def[key] = format_value(v)
           end
@@ -140,6 +144,18 @@ module Dd2tf
       tile_def
     end
 
+    def filter_markers(v)
+      markers = []
+      v.each do |m|
+        marker = {}
+        m.each do |k, v|
+          marker[k] = format_value(v)
+        end
+        markers << marker
+      end
+      markers
+    end
+    
     def filter_requests(v)
       excludes = %w(apm_query)
 
