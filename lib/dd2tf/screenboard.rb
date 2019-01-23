@@ -63,17 +63,33 @@ module Dd2tf
         title
         params
         showTitle
+        isShared
+        board_id
+        autoscale
+        add_timeframe
+        aggregator
+        res_calc_func
+        metric_type
+        metric
+        is_valid_query
+        conditional_formats
+        calc_func
+        aggr
+        refresh_every
+        wrapped
+        padding
       )
       
       keys = {
         "mustShowErrors" => "must_show_errors",
-        "mustShowBreakdown" => "must_show_breadown",
-        "hideZeroCounds" => "hide_zero_counts",
+        "mustShowBreakdown" => "must_show_breakdown",
+        "hideZeroCounts" => "hide_zero_counts",
         "mustShowResourceList" => "must_show_resource_list",
         "title_text" => "title",
         "mustShowHits" => "must_show_hits",
         "mustShowDistribution" => "must_show_distribution",
         "mustShowLatency" => "must_show_latency",
+        "generated_title" => "title",
       }
 
       filtered_widgets = []
@@ -159,11 +175,15 @@ module Dd2tf
     end
 
     def filter_markers(v)
+      excludes = %w( val )
+
       markers = []
       v.each do |m|
         marker = {}
         m.each do |k, v|
-          marker[k] = format_value(v)
+          if !excludes.include?(k)
+            marker[k] = format_value(v)
+          end
         end
         markers << marker
       end
