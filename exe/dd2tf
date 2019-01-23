@@ -16,7 +16,7 @@ module Dd2tf
 
     def client
       instance_variable_get_or_set("@client",
-                                   ::Dogapi::Client.new(options[:dd_api_key], options[:dd_app_key]))
+                                   ::Dogapi::Client.new(ENV['DATADOG_API_KEY'], ENV['DATADOG_APP_KEY']))
     end
 
     private
@@ -48,6 +48,11 @@ module Dd2tf
     def timeboard
       puts ::Dd2tf::Import::Timeboard.new(client).print
     end
+
+    desc "screenboard", "ipmort screenboard resource to tfstate"
+    def screenboard
+      puts ::Dd2tf::Import::Screenboard.new(client).print
+    end
   end
 
   class Tf < Thor
@@ -67,14 +72,17 @@ module Dd2tf
     def user
       puts ::Dd2tf::User.new(client).output
     end
+
+    desc "screenboard", "puts screenboard config"
+    def screenboard
+      puts ::Dd2tf::Screenboard.new(client).output
+    end
   end
 
   class Cli < Thor
     include Thor::Actions
     include Util
 
-    class_option :dd_api_key, type: :string, required: true
-    class_option :dd_app_key, type: :string, required: true
 
     desc "print [resource]",
          "Print resources importing command for outputting to tfstate.
