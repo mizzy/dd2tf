@@ -147,6 +147,8 @@ module Dd2tf
         r.each do |k, v|
           if k == "conditional_formats"
             request[k] = filter_conditional_formats(v)
+          elsif k == "style"
+            request[k] = filter_style(v) if v != {}
           elsif v != nil && v != "" && v != [] && v != {}
             request[k] = format_value(v)
           end
@@ -171,6 +173,10 @@ module Dd2tf
     end
     
     def filter_time(v)
+      v
+    end
+
+    def filter_style(v)
       v
     end
     

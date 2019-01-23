@@ -19,6 +19,12 @@ resource "datadog_screenboard" "<%= board_name %>" {
                              <%- end -%>
                            }
                            <%- end -%>
+                         <%- elsif k == "style" -%>
+                           style {
+                           <%- v.each do |k, v| -%>
+                             <%= k %> = "<%= v %>"
+                           <%- end -%>
+                           }
                          <%- else -%>
                            <%= k %> = <%= v %>
                          <%- end -%>
