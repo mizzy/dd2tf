@@ -108,7 +108,7 @@ module Dd2tf
       v.each do |t|
         template_variable = {}
         t.each do |k, v|
-          template_variable[k] = format_value(v)
+          template_variable[k] = format_value(v) if v != nil
         end
         template_variables << template_variable
       end
@@ -141,16 +141,20 @@ module Dd2tf
     end
 
     def filter_requests(v)
+      excludes = %w(apm_query)
+
       requests = []
       v.each do |r|
         request = {}
         r.each do |k, v|
-          if k == "conditional_formats"
-            request[k] = filter_conditional_formats(v)
-          elsif k == "style"
-            request[k] = filter_style(v) if v != {}
-          elsif v != nil && v != "" && v != [] && v != {}
-            request[k] = format_value(v)
+          if !excludes.include?(k)
+            if k == "conditional_formats"
+              request[k] = filter_conditional_formats(v)
+            elsif k == "style"
+              request[k] = filter_style(v) if v != {}
+            elsif v != nil && v != "" && v != [] && v != {}
+              request[k] = format_value(v) if v != nil
+            end
           end
         end
         requests << request
@@ -163,7 +167,7 @@ module Dd2tf
       v.each do |f|
         format = {}
         f.each do |k, v|
-          if v != ""
+          if v != "" && v != nil
             format[k] = format_value(v)
           end
         end
@@ -187,8 +191,10 @@ module Dd2tf
         v
       elsif v.is_a?(Array)
         v
+      elsif v.is_a?(Hash)
+        v
       else 
-        %Q{"#{v}"}
+        %Q{"#{v.gsub(/^\n/, '')}"}
       end
     end
   end
